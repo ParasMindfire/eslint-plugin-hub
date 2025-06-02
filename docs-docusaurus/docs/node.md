@@ -6,12 +6,13 @@ To enhance code quality, maintainability, and enforce best practices in your Nod
 
 ### Node Rules
 
-| Rule Name                       | Description                                                                                                                                                                     |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `minimize-complexflows`         | Enforces simplified control flow by limiting recursion and nesting depth, and detecting direct or lexically scoped recursion to improve readability and reduce error potential. |
-| `avoid-runtime-heap-allocation` | Discourages heap allocation of common data structures (arrays, objects, Maps, Sets) within function bodies, especially in loops, to promote reuse and reduce GC pressure.       |
-| `limit-reference-depth` | Restricts the depth of chained property access and enforces optional chaining to prevent runtime errors, improve null safety, and encourage safer access patterns in deeply nested data structures.       |
-| `keep-functions-concise` | Enforces a maximum number of lines per function, with options to skip blank lines and comments, to promote readability, maintainability, and concise logic blocks.       |
+| Rule Name                       | Description                                                                                                                                                                                         |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `minimize-complexflows`         | Enforces simplified control flow by limiting recursion and nesting depth, and detecting direct or lexically scoped recursion to improve readability and reduce error potential.                     |
+| `avoid-runtime-heap-allocation` | Discourages heap allocation of common data structures (arrays, objects, Maps, Sets) within function bodies, especially in loops, to promote reuse and reduce GC pressure.                           |
+| `limit-reference-depth`         | Restricts the depth of chained property access and enforces optional chaining to prevent runtime errors, improve null safety, and encourage safer access patterns in deeply nested data structures. |
+| `keep-functions-concise`        | Enforces a maximum number of lines per function, with options to skip blank lines and comments, to promote readability, maintainability, and concise logic blocks.                                  |
+
 ### Configuration
 
 After installing the plugin (`npm install @mindfiredigital/eslint-plugin-hub --save-dev`), you'll need to add the Node.js-specific rules or configurations from `@mindfiredigital/eslint-plugin-hub` to your ESLint configuration file (e.g., `eslintrc.config.js`,`.eslintrc.json`, `.eslintrc.js`, or `.eslintrc.yaml`).
@@ -60,7 +61,7 @@ export default [
           /* options */
         },
       ],
-       'hub/keep-functions-concise': [
+      'hub/keep-functions-concise': [
         'warn',
         {
           /* options */
@@ -517,10 +518,6 @@ function useMixedTypes() {
 
 `ESLint Warning: Runtime allocation of 'Array' ([]) detected in function useMixedTypes. Consider pre-allocating and reusing, especially if this function is called frequently or is performance-sensitive. ESLint Warning: Runtime allocation of 'Object' ({ index: i }) detected inside a loop within function useMixedTypes. This can severely impact performance. Pre-allocate and reuse this structure.`
 
-
-
-
-
 ### `hub/limit-reference-depth`
 
 **Description**: Limits the depth of chained property access and enforces optional chaining to prevent runtime errors. This rule helps avoid brittle code that can crash when encountering null or undefined values in property chains, encouraging safer access patterns and better error handling.
@@ -530,10 +527,12 @@ function useMixedTypes() {
 **Options**: The rule accepts a single object with the following properties:
 
 #### `maxDepth`
+
 - **Type**: `number`
 - **Description**: Maximum allowed depth for property access chains. A depth of 1 means `obj.prop`, depth of 2 means `obj.prop.subprop`, etc.
 - **Default**: `3`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -543,10 +542,12 @@ function useMixedTypes() {
 ```
 
 #### `requireOptionalChaining`
+
 - **Type**: `boolean`
 - **Description**: When `true`, requires the use of optional chaining (`?.`) for all property access beyond the first level.
 - **Default**: `true`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -556,10 +557,12 @@ function useMixedTypes() {
 ```
 
 #### `allowSinglePropertyAccess`
+
 - **Type**: `boolean`
 - **Description**: When `true`, allows single-level property access without optional chaining (e.g., `obj.prop` is allowed, but `obj.prop.subprop` still requires `obj.prop?.subprop`).
 - **Default**: `false`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -569,10 +572,12 @@ function useMixedTypes() {
 ```
 
 #### `ignoredBases`
+
 - **Type**: `array of string`
 - **Description**: Array of base identifier names that should be exempt from this rule's checks.
 - **Default**: `[]`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -582,10 +587,12 @@ function useMixedTypes() {
 ```
 
 #### `ignoreCallExpressions`
+
 - **Type**: `boolean`
 - **Description**: When `true`, ignores property chains that end with function calls.
 - **Default**: `true`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -595,10 +602,12 @@ function useMixedTypes() {
 ```
 
 #### `ignoreImportedModules`
+
 - **Type**: `boolean`
 - **Description**: When `true`, ignores property access on imported/required modules.
 - **Default**: `true`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -608,10 +617,12 @@ function useMixedTypes() {
 ```
 
 #### `ignoreGlobals`
+
 - **Type**: `boolean`
 - **Description**: When `true`, ignores property access on global objects like `Math`, `JSON`, `console`, etc.
 - **Default**: `true`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -621,10 +632,12 @@ function useMixedTypes() {
 ```
 
 #### `ignoreCommonPatterns`
+
 - **Type**: `boolean`
 - **Description**: When `true`, ignores common safe patterns like `this`, `super`, `module`, `exports`, etc.
 - **Default**: `true`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -636,6 +649,7 @@ function useMixedTypes() {
 #### Example Configuration
 
 #### Full Configuration in `eslint.config.js`:
+
 ```javascript
 // eslint.config.js
 // Assuming 'hubPlugin' is your imported plugin '@mindfiredigital/eslint-plugin-hub'
@@ -662,6 +676,7 @@ function useMixedTypes() {
 #### Examples
 
 #### Scenario 1: Default Configuration
+
 `"hub/limit-reference-depth": ["warn"]` (implies all default options)
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -711,6 +726,7 @@ const result = getUser().profile.name;
 ```
 
 #### Scenario 2: Relaxed Optional Chaining
+
 `"hub/limit-reference-depth": ["warn", { "requireOptionalChaining": false }]`
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -733,6 +749,7 @@ const deep = obj.a.b.c.d; // depth 4 > maxDepth 3
 ```
 
 #### Scenario 3: Allow Single Property Access
+
 `"hub/limit-reference-depth": ["warn", { "allowSinglePropertyAccess": true }]`
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -754,6 +771,7 @@ const name = item.details.name;
 ```
 
 #### Scenario 4: Custom maxDepth
+
 `"hub/limit-reference-depth": ["warn", { "maxDepth": 2 }]`
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -772,6 +790,7 @@ const deep = obj?.a?.b?.c; // depth 3 > maxDepth 2
 ```
 
 #### Scenario 5: Custom Ignored Bases
+
 `"hub/limit-reference-depth": ["warn", { "ignoredBases": ["config", "env"] }]`
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -813,8 +832,10 @@ function processUser(user) {
 
 // Utility functions for complex access
 function getNestedValue(obj, path, defaultValue) {
-  return path.split('.').reduce((current, key) => 
-    current?.[key], obj) ?? defaultValue;
+  return (
+    path.split('.').reduce((current, key) => current?.[key], obj) ??
+    defaultValue
+  );
 }
 ```
 
@@ -840,11 +861,13 @@ return user?.profile.settings.theme; // Inconsistent safety
 **Options**: The rule accepts a single object with the following properties:
 
 #### `maxLines`
+
 - **Type**: `number`
 - **Description**: Maximum allowed number of lines per function (including function declarations, arrow functions, and function expressions).
 - **Default**: `60`
 - **Minimum**: `0`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -854,10 +877,12 @@ return user?.profile.settings.theme; // Inconsistent safety
 ```
 
 #### `skipBlankLines`
+
 - **Type**: `boolean`
 - **Description**: When `true`, blank lines are not counted toward the line limit.
 - **Default**: `false`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -867,10 +892,12 @@ return user?.profile.settings.theme; // Inconsistent safety
 ```
 
 #### `skipComments`
+
 - **Type**: `boolean`
 - **Description**: When `true`, comment-only lines are not counted toward the line limit. This includes single-line comments (`//`) and single-line block comments (`/* */`).
 - **Default**: `false`
 - **Example Usage**:
+
 ```javascript
 {
   "rules": {
@@ -882,6 +909,7 @@ return user?.profile.settings.theme; // Inconsistent safety
 #### Example Configuration
 
 #### Full Configuration in `eslint.config.js`:
+
 ```javascript
 // eslint.config.js
 // Assuming 'hubPlugin' is your imported plugin '@mindfiredigital/eslint-plugin-hub'
@@ -903,6 +931,7 @@ return user?.profile.settings.theme; // Inconsistent safety
 #### Examples
 
 #### Scenario 1: Default Configuration
+
 `"hub/keep-functions-concise": ["warn"]` (implies `maxLines: 60`, `skipBlankLines: false`, `skipComments: false`)
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -913,38 +942,38 @@ function validateUserData(user) {
   if (!user || !user.name) {
     return false;
   }
-  
+
   if (typeof user.name !== 'string') {
     return false;
   }
-  
+
   if (user.name.trim().length === 0) {
     return false;
   }
-  
+
   return true;
 }
 
 // Arrow function within limit
-const transformUserData = (user) => {
+const transformUserData = user => {
   return {
     id: user.id,
     name: user.name.toUpperCase(),
     email: user.email?.toLowerCase(),
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   };
 };
 
 // Concise arrow function (single expression)
-const getUserId = (user) => user?.id || null;
+const getUserId = user => user?.id || null;
 
 // Function expression within limit
-const processUser = function(user) {
+const processUser = function (user) {
   const isValid = validateUserData(user);
   if (!isValid) {
     throw new Error('Invalid user data');
   }
-  
+
   const transformed = transformUserData(user);
   return saveUser(transformed);
 };
@@ -963,13 +992,17 @@ function processUserWithEverything(user) {
   if (typeof user.email !== 'string') throw new Error('Email must be string');
   if (user.name.trim().length === 0) throw new Error('Name cannot be empty');
   if (!user.email.includes('@')) throw new Error('Invalid email format');
-  
+
   // Transformation logic (20 lines)
   const normalizedName = user.name.trim().toLowerCase();
   const normalizedEmail = user.email.trim().toLowerCase();
   const slug = normalizedName.replace(/\s+/g, '-');
-  const initials = normalizedName.split(' ').map(n => n[0]).join('').toUpperCase();
-  
+  const initials = normalizedName
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase();
+
   // Persistence logic (15 lines)
   const existingUser = database.users.findByEmail(normalizedEmail);
   if (existingUser) {
@@ -977,7 +1010,7 @@ function processUserWithEverything(user) {
       name: normalizedName,
       slug: slug,
       initials: initials,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
   } else {
     database.users.create({
@@ -985,16 +1018,17 @@ function processUserWithEverything(user) {
       email: normalizedEmail,
       slug: slug,
       initials: initials,
-      createdAt: new Date()
+      createdAt: new Date(),
     });
   }
-  
+
   // Logging and cleanup (10+ more lines)...
 }
 // ESLint Warning: Function "processUserWithEverything" has 85 lines (max 60 allowed). (no lines skipped by options)
 ```
 
 #### Scenario 2: Skip Blank Lines
+
 `"hub/keep-functions-concise": ["warn", { "skipBlankLines": true }]`
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -1008,25 +1042,23 @@ function calculateTotalPrice(items) {
     subtotal += item.price * item.quantity;
   }
 
-  
   const taxRate = 0.08;
   const tax = subtotal * taxRate;
 
-  
   const shippingCost = subtotal > 100 ? 0 : 10;
 
-  
   return {
     subtotal,
     tax,
     shipping: shippingCost,
-    total: subtotal + tax + shippingCost
+    total: subtotal + tax + shippingCost,
   };
 }
 // Blank lines are not counted, so this stays within limits
 ```
 
 #### Scenario 3: Skip Comments
+
 `"hub/keep-functions-concise": ["warn", { "skipComments": true }]`
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -1039,12 +1071,12 @@ function complexBusinessLogic(data) {
   if (!data || typeof data !== 'object') {
     throw new Error('Invalid input data');
   }
-  
+
   // Step 2: Initialize processing variables
   // We need these for the calculation loop
   let result = 0;
   let processed = 0;
-  
+
   // Step 3: Process each item in the data
   // The algorithm here implements the XYZ business rule
   for (const item of data.items) {
@@ -1052,19 +1084,19 @@ function complexBusinessLogic(data) {
     if (!item.value || item.value < 0) {
       continue;
     }
-    
+
     // Apply the business transformation
     // This formula was provided by the business team
     result += item.value * 1.5;
     processed++;
   }
-  
+
   // Step 4: Apply final adjustments
   // These adjustments are required by regulation ABC
   if (processed > 10) {
     result *= 0.95; // Volume discount
   }
-  
+
   /* Final validation before return */
   return Math.round(result * 100) / 100;
 }
@@ -1072,6 +1104,7 @@ function complexBusinessLogic(data) {
 ```
 
 #### Scenario 4: Combined Options
+
 `"hub/keep-functions-concise": ["warn", { "maxLines": 30, "skipBlankLines": true, "skipComments": true }]`
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -1081,7 +1114,7 @@ function complexBusinessLogic(data) {
 function moderateFunction(input) {
   // This function has a lower line limit
   // but comments and blank lines don't count
-  
+
   const step1 = processStep1(input);
 
   // Intermediate processing
@@ -1093,6 +1126,7 @@ function moderateFunction(input) {
 ```
 
 #### Scenario 5: Zero Line Limit (Extreme)
+
 `"hub/keep-functions-concise": ["error", { "maxLines": 0 }]`
 
 #### ✅ Valid (Should NOT produce warnings):
@@ -1100,8 +1134,8 @@ function moderateFunction(input) {
 ```javascript
 // Only concise arrow functions allowed
 const add = (a, b) => a + b;
-const getName = (user) => user?.name || 'Anonymous';
-const isValid = (data) => data && data.length > 0;
+const getName = user => user?.name || 'Anonymous';
+const isValid = data => data && data.length > 0;
 ```
 
 #### ❌ Invalid (Should PRODUCE warnings):
@@ -1136,14 +1170,14 @@ function transformUser(user) {
   return {
     name: user.name.trim().toLowerCase(),
     email: user.email.trim().toLowerCase(),
-    slug: user.name.replace(/\s+/g, '-')
+    slug: user.name.replace(/\s+/g, '-'),
   };
 }
 
 function saveUser(userData) {
   return database.users.create({
     ...userData,
-    createdAt: new Date()
+    createdAt: new Date(),
   });
 }
 
